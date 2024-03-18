@@ -4,30 +4,62 @@ from rxconfig import config
 
 import reflex as rx
 
-docs_url = "https://reflex.dev/docs/getting-started/introduction/"
-filename = f"{config.app_name}/{config.app_name}.py"
+from my_app import style
+
+def qa(question: str, answer: str) -> rx.Component:
+    return rx.box(
+        rx.box(
+            rx.text(question, style=style.question_style),
+            text_align="right",
+        ),
+        rx.box(
+            rx.text(answer, style=style.answer_style),
+            text_align="left",
+        ),
+        margin_y="1em",
+    )
 
 
-class State(rx.State):
-    """The app state."""
+def chat() -> rx.Component:
+    qa_pairs = [
+        (
+            "What is Reflex?",
+            "A way to build web apps in pure Python!",
+        ),
+        (
+            "What can I make with it?",
+            "Anything from a simple website to a complex web app!",
+        ),
+        (
+            "How cool is this...",
+            "I know right?!"
+        )
+    ]
+    return rx.box(
+        *[
+            qa(question, answer)
+            for question, answer in qa_pairs
+        ]
+    )
+
+
+def action_bar() -> rx.Component:
+    return rx.hstack(
+        rx.input(
+            placeholder="Ask a question",
+            style=style.input_style,
+        ),
+        rx.button("Ask", style=style.button_style),
+    )
 
 
 def index() -> rx.Component:
     return rx.center(
-        # rx.theme_panel(),
         rx.vstack(
-            rx.heading("Welcome to Reflex!", size="9"),
-            rx.text("Get started by editing ", rx.code(filename)),
-            rx.button(
-                "Check out our docs!",
-                on_click=lambda: rx.redirect(docs_url),
-                size="4",
-            ),
+            chat(),
+            action_bar(),
             align="center",
-            spacing="7",
-            font_size="2em",
-        ),
-        height="100vh",
+        )
     )
 
 
