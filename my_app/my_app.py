@@ -53,11 +53,34 @@ def action_bar() -> rx.Component:
     )
 
 
+class State(rx.State):
+    index: int = 0
+
+    def increment(self):
+        self.index += 1
+    
+    def decrement(self):
+        self.index -= 1
+    
+    @rx.var
+    def getIndex(self) -> int:
+        return self.index
+
+def counter() -> rx.Component:
+    return rx.hstack(
+        rx.button("-", on_click=State.decrement),
+        rx.heading(State.getIndex),
+        rx.button("+", on_click=State.increment),
+        style=dict(marginTop="2em"),
+    )
+
+
 def index() -> rx.Component:
     return rx.center(
         rx.vstack(
             chat(),
             action_bar(),
+            counter(),
             align="center",
         )
     )
